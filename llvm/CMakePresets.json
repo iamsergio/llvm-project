@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "dev",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "LLVM_ENABLE_RUNTIMES": "libcxx;libcxxabi;libunwind",
+        "LLVM_INCLUDE_EXAMPLES": "OFF",
+        "LLVM_TARGETS_TO_BUILD": "X86",
+        "LLVM_ENABLE_PROJECTS": "clang;lldb;lld;compiler-rt;clang-tools-extra",
+        "BUILD_SHARED_LIBS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-trunk",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "inherits": "dev"
+    },
+    {
+      "name": "release-18",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-18"
+      },
+      "inherits": "release"
+    },
+    {
+      "name": "release-20",
+      "inherits": "release",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-20"
+      }
+    }
+  ]
+}
