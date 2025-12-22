@@ -1,89 +1,49 @@
 {
-  "version": 6,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 20,
-    "patch": 0
-  },
+  "version": 2,
   "configurePresets": [
     {
-      "name": "llvm-build-shared-libs",
-      "hidden": true,
-      "description": "Build shared libraries",
+      "name": "dev",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-${presetName}",
       "cacheVariables": {
-        "BUILD_SHARED_LIBS": true
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "LLVM_ENABLE_RUNTIMES": "libcxx;libcxxabi;libunwind",
+        "LLVM_INCLUDE_EXAMPLES": "OFF",
+        "LLVM_TARGETS_TO_BUILD": "X86",
+        "LLVM_ENABLE_PROJECTS": "clang;lldb;lld;compiler-rt;clang-tools-extra",
+        "BUILD_SHARED_LIBS": "ON",
+        "LLVM_BUILD_TESTS": "true"
       }
     },
     {
-      "name": "llvm-build-tests",
-      "hidden": true,
-      "description": "Build tests",
+      "name": "profile",
+      "inherits": "dev",
       "cacheVariables": {
-        "LLVM_BUILD_TESTS": true
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "LLVM_BUILD_BENCHMARKS": "true"
       }
     },
     {
-      "name": "llvm-enable-assertions",
-      "hidden": true,
-      "description": "Enable runtime assertions",
+      "name": "release",
       "cacheVariables": {
-        "LLVM_ENABLE_ASSERTIONS": true
-      }
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-trunk",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
+      "inherits": "dev"
     },
     {
-      "name": "llvm-enable-projects-clang",
-      "hidden": true,
-      "description": "Enable projects clang",
+      "name": "release-18",
       "cacheVariables": {
-        "LLVM_ENABLE_PROJECTS": "clang"
-      }
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-18"
+      },
+      "inherits": "release"
     },
     {
-      "name": "llvm-enable-projects-clang-tools-extra",
-      "hidden": true,
-      "description": "Enable projects clang, clang-tools-extra",
+      "name": "release-20",
+      "inherits": "release",
       "cacheVariables": {
-        "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra"
-      }
-    },
-    {
-      "name": "llvm-enable-lto",
-      "hidden": true,
-      "description": "Enable link time optimizations (LTO)",
-      "cacheVariables": {
-        "LLVM_ENABLE_LTO": true
-      }
-    },
-    {
-      "name": "llvm-export-compile-commands",
-      "hidden": true,
-      "description": "Generate a compile_commands.json database",
-      "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": true
-      }
-    },
-    {
-      "name": "llvm-no-build-testing",
-      "hidden": true,
-      "description": "Turn off building of tests",
-      "cacheVariables": {
-        "BUILD_TESTING": false
-      }
-    },
-    {
-      "name": "llvm-target-x86",
-      "hidden": true,
-      "description": "Only target x86 back end",
-      "cacheVariables": {
-        "LLVM_TARGETS_TO_BUILD": "X86"
-      }
-    },
-    {
-      "name": "llvm-use-sanitizer-asan",
-      "hidden": true,
-      "description": "Build with ASAN",
-      "cacheVariables": {
-        "LLVM_USE_SANITIZER": "Address"
+        "CMAKE_INSTALL_PREFIX": "/data/installation/clang-20"
       }
     }
   ]
