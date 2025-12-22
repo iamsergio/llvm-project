@@ -1,89 +1,81 @@
 {
-  "version": 6,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 20,
-    "patch": 0
-  },
+  "version": 2,
   "configurePresets": [
     {
-      "name": "llvm-build-shared-libs",
-      "hidden": true,
-      "description": "Build shared libraries",
+      "name": "dev",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-${presetName}",
       "cacheVariables": {
-        "BUILD_SHARED_LIBS": true
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "LLVM_ENABLE_RUNTIMES": "compiler-rt;libcxx;libcxxabi;libunwind",
+        "LLVM_INCLUDE_EXAMPLES": "OFF",
+        "LLVM_TARGETS_TO_BUILD": "X86",
+        "LLVM_ENABLE_PROJECTS": "clang;lldb;lld;clang-tools-extra",
+        "BUILD_SHARED_LIBS": "OFF",
+        "LLVM_INCLUDE_TESTS": "ON",
+        "LLVM_BUILD_TESTS": "OFF",
+        "CLANGD_TIDY_CHECKS": "OFF",
+        "CLANG_TIDY_ENABLE_STATIC_ANALYZER": "OFF",
+        "LLVM_ENABLE_LLD": "ON"
       }
     },
     {
-      "name": "llvm-build-tests",
-      "hidden": true,
-      "description": "Build tests",
+      "name": "asan",
+      "inherits": "dev",
       "cacheVariables": {
-        "LLVM_BUILD_TESTS": true
-      }
-    },
-    {
-      "name": "llvm-enable-assertions",
-      "hidden": true,
-      "description": "Enable runtime assertions",
-      "cacheVariables": {
-        "LLVM_ENABLE_ASSERTIONS": true
-      }
-    },
-    {
-      "name": "llvm-enable-projects-clang",
-      "hidden": true,
-      "description": "Enable projects clang",
-      "cacheVariables": {
-        "LLVM_ENABLE_PROJECTS": "clang"
-      }
-    },
-    {
-      "name": "llvm-enable-projects-clang-tools-extra",
-      "hidden": true,
-      "description": "Enable projects clang, clang-tools-extra",
-      "cacheVariables": {
-        "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra"
-      }
-    },
-    {
-      "name": "llvm-enable-lto",
-      "hidden": true,
-      "description": "Enable link time optimizations (LTO)",
-      "cacheVariables": {
-        "LLVM_ENABLE_LTO": true
-      }
-    },
-    {
-      "name": "llvm-export-compile-commands",
-      "hidden": true,
-      "description": "Generate a compile_commands.json database",
-      "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": true
-      }
-    },
-    {
-      "name": "llvm-no-build-testing",
-      "hidden": true,
-      "description": "Turn off building of tests",
-      "cacheVariables": {
-        "BUILD_TESTING": false
-      }
-    },
-    {
-      "name": "llvm-target-x86",
-      "hidden": true,
-      "description": "Only target x86 back end",
-      "cacheVariables": {
-        "LLVM_TARGETS_TO_BUILD": "X86"
-      }
-    },
-    {
-      "name": "llvm-use-sanitizer-asan",
-      "hidden": true,
-      "description": "Build with ASAN",
-      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "LLVM_USE_SANITIZER": "Address"
+      }
+    },
+    {
+      "name": "ubsan",
+      "inherits": "dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "LLVM_USE_SANITIZER": "Undefined"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "tsan",
+      "inherits": "dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "LLVM_USE_SANITIZER": "Thread"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "profile",
+      "inherits": "dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "LLVM_BUILD_BENCHMARKS": "true"
+      }
+    },
+    {
+      "name": "profile-lto",
+      "inherits": "profile",
+      "cacheVariables": {
+        "LLVM_ENABLE_LTO": "ON"
+      }
+    },
+    {
+      "name": "profile-lto-thin",
+      "inherits": "profile",
+      "cacheVariables": {
+        "LLVM_ENABLE_LTO": "THIN"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
       }
     }
   ]
