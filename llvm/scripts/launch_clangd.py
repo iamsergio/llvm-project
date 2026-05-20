@@ -20,15 +20,15 @@ def main():
         candidate = os.path.join(script_dir, "build-dev", "bin", "clangd")
         if os.path.exists(candidate):
             clangd_path = candidate
-    
+
     if not clangd_path:
         print("Error: clangd binary not found. Pass it as argument or ensure ./build-dev/bin/clangd exists.")
         sys.exit(1)
 
     # 2. Launch clangd
-    cmd = ["heaptrack", clangd_path, "-lit-test", "--background-index", "-j=16", "--background-index-priority=normal"]
+    cmd = [clangd_path, "-lit-test", "--background-index", "-j=16", "--background-index-priority=normal"]
     print(f"Launching: {" ".join(cmd)}", file=sys.stderr)
-    
+
     process = subprocess.Popen(
         cmd,
         stdin=subprocess.PIPE,
@@ -78,9 +78,9 @@ def main():
             "trace": "off"
         }
     }
-    
+
     send_message(process, initialize_msg)
-    
+
     # 4. Read response to initialize
     response = read_message(process)
     print("Received response:", json.dumps(response, indent=2), file=sys.stderr)
@@ -99,7 +99,7 @@ def main():
             # Ensure absolute path for URI
             if not os.path.isabs(file_path):
                 file_path = os.path.abspath(file_path)
-            
+
             did_open_msg = {
                 "jsonrpc": "2.0",
                 "method": "textDocument/didOpen",
@@ -113,7 +113,7 @@ def main():
             }
             send_message(process, did_open_msg)
             break
-    
+
     # Keep alive
     try:
         process.wait()
@@ -138,7 +138,7 @@ def read_message(process):
             break
         if line.startswith("Content-Length:"):
             content_length = int(line.split(":", 1)[1].strip())
-    
+
     if content_length is None:
         return None
 
